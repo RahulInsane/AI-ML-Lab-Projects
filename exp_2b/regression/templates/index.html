@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stock Price Prediction</title>
+  <style>
+    body{
+      margin:0;
+      font-family: Arial, sans-serif;
+      background:#0f172a;
+      color:white;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+      padding:20px;
+    }
+    .card{
+      width:900px;
+      background:#111827;
+      padding:25px;
+      border-radius:16px;
+      box-shadow:0 8px 25px rgba(0,0,0,0.4);
+    }
+    h2{
+      text-align:center;
+      margin-top:0;
+    }
+    p{
+      text-align:center;
+      color:#cbd5e1;
+      font-size:14px;
+      margin-top:-8px;
+    }
+    select,button{
+      width:100%;
+      padding:12px;
+      margin-top:12px;
+      border-radius:10px;
+      border:none;
+      font-size:15px;
+    }
+    select{
+      background:#1f2937;
+      color:white;
+      outline:none;
+    }
+    button{
+      background:#2563eb;
+      color:white;
+      cursor:pointer;
+      font-weight:bold;
+    }
+    button:hover{
+      background:#1d4ed8;
+    }
+
+    .result{
+      margin-top:18px;
+      padding:14px;
+      border-radius:12px;
+      background: rgba(37,99,235,0.15);
+      border:1px solid rgba(37,99,235,0.4);
+      text-align:center;
+      font-size:18px;
+      font-weight:bold;
+    }
+
+    .rmse-box{
+      margin-top:18px;
+      display:flex;
+      gap:15px;
+    }
+
+    .rmse-card{
+      flex:1;
+      padding:14px;
+      border-radius:12px;
+      background: rgba(16,185,129,0.12);
+      border:1px solid rgba(16,185,129,0.35);
+      text-align:center;
+      font-size:16px;
+      font-weight:bold;
+    }
+
+    .rmse-card span{
+      display:block;
+      margin-top:6px;
+      font-size:20px;
+      color:#a7f3d0;
+    }
+
+    .graph{
+      margin-top:20px;
+      text-align:center;
+    }
+    .graph img{
+      width:100%;
+      border-radius:12px;
+      border:2px solid #334155;
+      margin-top:10px;
+    }
+    .error{
+      margin-top:15px;
+      padding:12px;
+      border-radius:12px;
+      background: rgba(239, 68, 68, 0.15);
+      border:1px solid rgba(239, 68, 68, 0.4);
+      color:#fecaca;
+      font-weight:bold;
+      text-align:center;
+    }
+    footer{
+      text-align:center;
+      margin-top:15px;
+      font-size:12px;
+      color:#94a3b8;
+    }
+  </style>
+</head>
+
+<body>
+<div class="card">
+  <h2>📈 Stock Price Prediction</h2>
+  <p>Select a stock + model and visualize Actual vs Predicted + RMSE comparison</p>
+
+  <form method="POST">
+
+    <label><b>Select Stock:</b></label>
+    <select name="stock" required>
+      {% for stock in stock_files %}
+        <option value="{{stock}}" {% if selected_stock==stock %}selected{% endif %}>
+          {{stock}}
+        </option>
+      {% endfor %}
+    </select>
+
+    <label><b>Select Model:</b></label>
+    <select name="model" required>
+      <option value="lr" {% if selected_model=="lr" %}selected{% endif %}>Linear Regression</option>
+      <option value="lstm" {% if selected_model=="lstm" %}selected{% endif %}>LSTM (Stock-wise trained)</option>
+    </select>
+
+    <button type="submit">Predict + Show Graph</button>
+  </form>
+
+  {% if prediction %}
+    <div class="result">
+      ✅ Next Predicted Price: {{ prediction }}
+    </div>
+  {% endif %}
+
+  {% if lr_rmse %}
+    <div class="rmse-box">
+      <div class="rmse-card">
+        📌 Linear Regression RMSE
+        <span>{{ lr_rmse }}</span>
+      </div>
+
+      <div class="rmse-card">
+        📌 LSTM RMSE
+        <span>
+          {% if lstm_rmse %}
+            {{ lstm_rmse }}
+          {% else %}
+            (Select LSTM)
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if graph_generated %}
+    <div class="graph">
+      <h3>📊 Actual vs Predicted Graph</h3>
+      <img src="{{ url_for('static', filename='plot.png') }}" alt="Graph">
+    </div>
+  {% endif %}
+
+  {% if error_msg %}
+    <div class="error">
+      ❌ {{ error_msg }}
+    </div>
+  {% endif %}
+
+  <footer>Flask + LR vs LSTM + RMSE Comparison</footer>
+</div>
+</body>
+</html>

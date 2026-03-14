@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Grades</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Your Grades</h2>
+
+<table>
+
+<tr>
+<th>Subject</th>
+<th>Marks</th>
+<th>Grade</th>
+</tr>
+
+{% for g in grades %}
+<tr>
+<td>{{ g[0] }}</td>
+<td>{{ g[1] }}</td>
+<td>{{ g[2] }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<br>
+<a href="/dashboard">Back</a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Profile</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Update Profile</h2>
+
+<form method="POST">
+
+<input type="text" name="username" placeholder="New Username" required>
+<input type="email" name="email" placeholder="New Email" required>
+
+<button type="submit">Update</button>
+
+</form>
+
+<br>
+<a href="/dashboard">Back</a>
+
+</div>
+
+</body>
+</html>
